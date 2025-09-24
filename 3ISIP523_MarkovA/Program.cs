@@ -168,3 +168,32 @@ namespace ShopInventory
         }
 
         static void SellProduct()
+        {
+            Console.Write("Введите код товара для продажи: ");
+            string code = Console.ReadLine();
+            var product = products.FirstOrDefault(p => p.Code == code);
+
+            if (product == null)
+            {
+                Console.WriteLine("Товар не найден.");
+                return;
+            }
+
+            Console.Write("Введите количество для продажи: ");
+            if (!int.TryParse(Console.ReadLine(), out int sellQty) || sellQty <= 0)
+            {
+                Console.WriteLine("Ошибка: количество должно быть положительным.");
+                return;
+            }
+
+            if (product.Quantity < sellQty)
+            {
+                Console.WriteLine("Ошибка: недостаточно товара на складе.");
+                return;
+            }
+
+            product.Quantity -= sellQty;
+            Console.WriteLine("Продажа выполнена.");
+        }
+
+       
