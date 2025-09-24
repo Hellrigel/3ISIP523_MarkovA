@@ -196,4 +196,44 @@ namespace ShopInventory
             Console.WriteLine("Продажа выполнена.");
         }
 
-       
+        static void SearchProduct()
+        {
+            Console.WriteLine("Поиск по: 1 - коду, 2 - названию, 3 - категории");
+            string option = Console.ReadLine();
+
+            switch (option)
+            {
+                case "1":
+                    Console.Write("Введите код: ");
+                    string code = Console.ReadLine();
+                    var byCode = products.FirstOrDefault(p => p.Code == code);
+                    Console.WriteLine(byCode?.ToString() ?? "Товар не найден.");
+                    break;
+
+                case "2":
+                    Console.Write("Введите название: ");
+                    string name = Console.ReadLine();
+                    var byName = products.Where(p => p.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
+                    if (!byName.Any()) Console.WriteLine("Товары не найдены.");
+                    else foreach (var p in byName) Console.WriteLine(p);
+                    break;
+
+                case "3":
+                    Console.WriteLine("Выберите категорию: 1 - Электроника, 2 - Еда, 3 - Одежда");
+                    if (!int.TryParse(Console.ReadLine(), out int cat) || !Enum.IsDefined(typeof(Category), cat))
+                    {
+                        Console.WriteLine("Ошибка: неверная категория.");
+                        return;
+                    }
+                    var byCat = products.Where(p => p.Category == (Category)cat);
+                    if (!byCat.Any()) Console.WriteLine("Товары не найдены.");
+                    else foreach (var p in byCat) Console.WriteLine(p);
+                    break;
+
+                default:
+                    Console.WriteLine("Неверный выбор.");
+                    break;
+            }
+        }
+
+        
