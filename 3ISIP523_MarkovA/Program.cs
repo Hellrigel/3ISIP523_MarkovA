@@ -144,4 +144,27 @@ namespace ShopInventory
             }
         }
 
-        
+        static void OrderSupply()
+        {
+            Console.Write("Введите код товара для поставки: ");
+            string code = Console.ReadLine();
+            var product = products.FirstOrDefault(p => p.Code == code);
+
+            if (product == null)
+            {
+                Console.WriteLine("Товар не найден.");
+                return;
+            }
+
+            Console.Write("Введите количество для поставки: ");
+            if (!int.TryParse(Console.ReadLine(), out int addQty) || addQty <= 0)
+            {
+                Console.WriteLine("Ошибка: количество должно быть положительным.");
+                return;
+            }
+
+            product.Quantity += addQty;
+            Console.WriteLine("Поставка выполнена.");
+        }
+
+        static void SellProduct()
