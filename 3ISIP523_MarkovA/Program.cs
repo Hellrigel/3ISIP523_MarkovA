@@ -129,4 +129,19 @@ namespace ShopInventory
             }
         }
 
+        static void RemoveProduct()
+        {
+            Console.Write("Введите код товара для удаления: ");
+            string code = Console.ReadLine();
+            var product = products.FirstOrDefault(p => p.Code == code);
+
+            if (product == null)
+                Console.WriteLine("Товар не найден.");
+            else
+            {
+                products.Remove(product);
+                Console.WriteLine("Товар удален.");
+            }
+        }
+
         
