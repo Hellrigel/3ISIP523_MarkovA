@@ -236,4 +236,12 @@ namespace ShopInventory
             }
         }
 
-        
+        static void ShowAllProducts()
+        {
+            if (products.Count == 0)
+                Console.WriteLine("Список товаров пуст.");
+            else
+                foreach (var p in products) Console.WriteLine(p);
+        }
+    }
+}
