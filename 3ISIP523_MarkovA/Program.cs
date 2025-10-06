@@ -1,106 +1,171 @@
-﻿class Program
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+class TextStatistics
 {
-    static void Main()
+    public string OriginalText { get; private set; }
+    public int WordCount { get; private set; }
+    public string ShortestWord { get; private set; }
+    public string LongestWord { get; private set; }
+    public int SentenceCount { get; private set; }
+    public int VowelCount { get; private set; }
+    public int ConsonantCount { get; private set; }
+    public Dictionary<char, int> LetterFrequency { get; private set; }
+
+    public TextStatistics(string text)
     {
-        System.Console.Write("Количество операций (2-40): ");
-        int count = int.Parse(System.Console.ReadLine());
-
-        string[] names = new string[count];
-        decimal[] amounts = new decimal[count];
-
-        for (int i = 0; i < count; i++)
-        {
-            System.Console.Write($"Операция {i + 1}: ");
-            string input = System.Console.ReadLine();
-            int separator = input.IndexOf(';');
-            names[i] = input.Substring(0, separator).Trim();
-            amounts[i] = decimal.Parse(input.Substring(separator + 1).Trim());
-        }
-
-        while (true)
-        {
-            System.Console.WriteLine("\n1. Вывод\n2. Статистика\n3. Сортировка\n4. Конвертация\n5. Поиск\n0. Выход");
-            System.Console.Write("Выбор: ");
-            string choice = System.Console.ReadLine();
-
-            if (choice == "0") break;
-            if (choice == "1") ShowData(names, amounts);
-            if (choice == "2") ShowStats(amounts);
-            if (choice == "3") BubbleSort(names, amounts);
-            if (choice == "4") ConvertCurrency(names, amounts);
-            if (choice == "5") SearchByName(names, amounts);
-        }
+        OriginalText = text;
+        Analyze();
     }
-
-    static void ShowData(string[] names, decimal[] amounts)
+    class Program
     {
-        for (int i = 0; i < names.Length; i++)
-            System.Console.WriteLine($"{names[i]} - {amounts[i]} руб");
-    }
-
-    static void ShowStats(decimal[] amounts)
-    {
-        decimal sum = 0, max = amounts[0], min = amounts[0];
-        for (int i = 0; i < amounts.Length; i++)
+        static void Main()
         {
-            sum += amounts[i];
-            if (amounts[i] > max) max = amounts[i];
-            if (amounts[i] < min) min = amounts[i];
-        }
-        decimal avg = sum / amounts.Length;
+            List<TextStatistics> history = new List<TextStatistics>();
+            bool running = true;
 
-        System.Console.WriteLine($"Сумма: {sum} руб");
-        System.Console.WriteLine($"Среднее: {avg} руб");
-        System.Console.WriteLine($"Макс: {max} руб");
-        System.Console.WriteLine($"Мин: {min} руб");
-    }
-
-    static void BubbleSort(string[] names, decimal[] amounts)
-    {
-        for (int i = 0; i < amounts.Length - 1; i++)
-        {
-            for (int j = 0; j < amounts.Length - i - 1; j++)
+            while (running)
             {
-                if (amounts[j] > amounts[j + 1])
+                Console.WriteLine("Введите текст (минимум 100 символов):");
+                string input = Console.ReadLine();
+                if (input.Length < 100)
                 {
-                    decimal tempAmount = amounts[j];
-                    amounts[j] = amounts[j + 1];
-                    amounts[j + 1] = tempAmount;
+                    Console.WriteLine("Текст слишком короткий! Повторите ввод.");
+                    continue;
+                }
 
-                    string tempName = names[j];
-                    names[j] = names[j + 1];
-                    names[j + 1] = tempName;
+                TextStatistics stats = new TextStatistics(input);
+                history.Add(stats);
+                stats.PrintStatistics();
+
+                Console.WriteLine("\nХотите ввести новый текст? (y)");
+                string answer = Console.ReadLine().ToLower();
+
+                if (answer != "y")
+                    running = false;
+            }
+
+            Console.WriteLine("\nИстория статистики:");
+            int index = 1;
+            foreach (var stat in history)
+            {
+                Console.WriteLine($"\nТекст {index}:");
+                stat.PrintStatistics();
+                index++;
+            }
+        }
+    }
+    private void Analyze()
+    {
+        string[] words = SplitWords(OriginalText);
+        WordCount = words.Length;
+
+        if (WordCount > 0)
+        {
+            ShortestWord = words[0];
+            LongestWord = words[0];
+            for (int i = 1; i < words.Length; i++)
+            {
+                if (words[i].Length < ShortestWord.Length)
+                    ShortestWord = words[i];
+                if (words[i].Length > LongestWord.Length)
+                    LongestWord = words[i];
+            }
+        }
+
+        SentenceCount = CountSentences(OriginalText);
+        CountLetters(OriginalText);
+        CountLetterFrequency(OriginalText);
+    }
+
+    private string[] SplitWords(string text)
+    {
+        List<string> words = new List<string>();
+        StringBuilder currentWord = new StringBuilder();
+
+        foreach (char c in text)
+        {
+            if (char.IsLetter(c))
+            {
+                currentWord.Append(c);
+            }
+            else
+            {
+                if (currentWord.Length > 0)
+                {
+                    words.Add(currentWord.ToString());
+                    currentWord.Clear();
                 }
             }
         }
-        System.Console.WriteLine("Отсортировано!");
+
+        if (currentWord.Length > 0)
+            words.Add(currentWord.ToString());
+
+        return words.ToArray();
     }
 
-    static void ConvertCurrency(string[] names, decimal[] amounts)
+    private int CountSentences(string text)
     {
-        System.Console.Write("Курс (рубль к валюте): ");
-        decimal rate = decimal.Parse(System.Console.ReadLine());
-        System.Console.Write("Символ валюты: ");
-        string symbol = System.Console.ReadLine();
-
-        for (int i = 0; i < names.Length; i++)
-            System.Console.WriteLine($"{names[i]} - {amounts[i] * rate} {symbol}");
-    }
-
-    static void SearchByName(string[] names, decimal[] amounts)
-    {
-        System.Console.Write("Поиск: ");
-        string term = System.Console.ReadLine().ToLower();
-
-        bool found = false;
-        for (int i = 0; i < names.Length; i++)
+        int count = 0;
+        foreach (char c in text)
         {
-            if (names[i].ToLower().Contains(term))
+            if (c == '.' || c == '!' || c == '?')
+
+                count++;
+        }
+        return count;
+    }
+
+    private void CountLetters(string text)
+    {
+        string vowels = "аеёиоуыэюяaeiouy";
+        VowelCount = 0;
+        ConsonantCount = 0;
+
+        foreach (char c in text.ToLower())
+        {
+            if (char.IsLetter(c))
             {
-                System.Console.WriteLine($"{names[i]} - {amounts[i]} руб");
-                found = true;
+                if (vowels.IndexOf(c) >= 0)
+                    VowelCount++;
+                else
+                    ConsonantCount++;
             }
         }
-        if (!found) System.Console.WriteLine("Не найдено");
+    }
+
+    private void CountLetterFrequency(string text)
+    {
+        LetterFrequency = new Dictionary<char, int>();
+        foreach (char c in text.ToLower())
+        {
+            if (char.IsLetter(c))
+            {
+                if (!LetterFrequency.ContainsKey(c))
+                    LetterFrequency[c] = 0;
+                LetterFrequency[c]++;
+            }
+        }
+    }
+
+    public void PrintStatistics()
+    {
+        Console.WriteLine("Статистика текста:");
+        Console.WriteLine($"Общее количество слов: {WordCount}");
+        Console.WriteLine($"Самое короткое слово: {ShortestWord}");
+        Console.WriteLine($"Самое длинное слово: {LongestWord}");
+        Console.WriteLine($"Количество предложений: {SentenceCount}");
+        Console.WriteLine($"Количество гласных: {VowelCount}");
+        Console.WriteLine($"Количество согласных: {ConsonantCount}");
+        Console.WriteLine("Частота букв:");
+
+        foreach (var kvp in LetterFrequency)
+        {
+            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+        }
     }
 }
+
+
