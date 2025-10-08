@@ -56,6 +56,67 @@ class TextStatistics
             }
         }
     }
-    
+    private void Analyze()
+    {
+        string[] words = SplitWords(OriginalText);
+        WordCount = words.Length;
+
+        if (WordCount > 0)
+        {
+            ShortestWord = words[0];
+            LongestWord = words[0];
+            for (int i = 1; i < words.Length; i++)
+            {
+                if (words[i].Length < ShortestWord.Length)
+                    ShortestWord = words[i];
+                if (words[i].Length > LongestWord.Length)
+                    LongestWord = words[i];
+            }
+        }
+
+        SentenceCount = CountSentences(OriginalText);
+        CountLetters(OriginalText);
+        CountLetterFrequency(OriginalText);
+    }
+
+    private string[] SplitWords(string text)
+    {
+        List<string> words = new List<string>();
+        StringBuilder currentWord = new StringBuilder();
+
+        foreach (char c in text)
+        {
+            if (char.IsLetter(c))
+            {
+                currentWord.Append(c);
+            }
+            else
+            {
+                if (currentWord.Length > 0)
+                {
+                    words.Add(currentWord.ToString());
+                    currentWord.Clear();
+                }
+            }
+        }
+
+        if (currentWord.Length > 0)
+            words.Add(currentWord.ToString());
+
+        return words.ToArray();
+    }
+
+    private int CountSentences(string text)
+    {
+        int count = 0;
+        foreach (char c in text)
+        {
+            if (c == '.' || c == '!' || c == '?')
+
+                count++;
+        }
+        return count;
+    }
+
 
 
