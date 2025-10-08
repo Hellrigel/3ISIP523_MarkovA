@@ -118,5 +118,54 @@ class TextStatistics
         return count;
     }
 
+    private void CountLetters(string text)
+    {
+        string vowels = "аеёиоуыэюяaeiouy";
+        VowelCount = 0;
+        ConsonantCount = 0;
+
+        foreach (char c in text.ToLower())
+        {
+            if (char.IsLetter(c))
+            {
+                if (vowels.IndexOf(c) >= 0)
+                    VowelCount++;
+                else
+                    ConsonantCount++;
+            }
+        }
+    }
+
+    private void CountLetterFrequency(string text)
+    {
+        LetterFrequency = new Dictionary<char, int>();
+        foreach (char c in text.ToLower())
+        {
+            if (char.IsLetter(c))
+            {
+                if (!LetterFrequency.ContainsKey(c))
+                    LetterFrequency[c] = 0;
+                LetterFrequency[c]++;
+            }
+        }
+    }
+
+    public void PrintStatistics()
+    {
+        Console.WriteLine("Статистика текста:");
+        Console.WriteLine($"Общее количество слов: {WordCount}");
+        Console.WriteLine($"Самое короткое слово: {ShortestWord}");
+        Console.WriteLine($"Самое длинное слово: {LongestWord}");
+        Console.WriteLine($"Количество предложений: {SentenceCount}");
+        Console.WriteLine($"Количество гласных: {VowelCount}");
+        Console.WriteLine($"Количество согласных: {ConsonantCount}");
+        Console.WriteLine("Частота букв:");
+
+        foreach (var kvp in LetterFrequency)
+        {
+            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+        }
+    }
+}
 
 
