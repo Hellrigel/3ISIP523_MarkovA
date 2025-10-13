@@ -17,6 +17,7 @@ namespace LibraryApp
             books.Add(new Book(nextId++, "Преступление и наказание", "Фёдор Достоевский", "Роман", 1866, 650));
             books.Add(new Book(nextId++, "Шерлок Холмс", "Артур Конан Дойл", "Детектив", 1892, 400));
             books.Add(new Book(nextId++, "Краткая история времени", "Стивен Хокинг", "Научная", 1988, 800));
+            books.Add(new Book(nextId++, "История Росии", "Максим Кац", "Исторический", 2016, 2000));
             while (true)
             {
                 Console.WriteLine("\n=== МЕНЮ ===");
@@ -200,4 +201,39 @@ namespace LibraryApp
                 Console.WriteLine($"{g.Автор}: {g.Количество}");
             }
         }
-        
+        static void ShowAll()
+        {
+            if (books.Count == 0)
+                Console.WriteLine("Список книг пуст!");
+            else
+                foreach (var b in books) b.Show();
+        }
+    }
+    class Book
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public string Genre { get; set; }
+        public int Year { get; set; }
+        public decimal Price { get; set; }
+        public Book(int id, string title, string author, string genre, int year, decimal price)
+        {
+            Id = id;
+            Title = title;
+            Author = author;
+            Genre = genre;
+            Year = year;
+            Price = price;
+        }
+        public void Show()
+        {
+            Console.WriteLine($"\nID: {Id}");
+            Console.WriteLine($"Название: {Title}");
+            Console.WriteLine($"Автор: {Author}");
+            Console.WriteLine($"Жанр: {Genre}");
+            Console.WriteLine($"Год: {Year}");
+            Console.WriteLine($"Цена: {Price} руб.");
+        }
+    }
+}
