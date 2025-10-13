@@ -95,4 +95,61 @@ namespace LibraryApp
             books.Add(new Book(nextId++, title, author, genre, year, price));
             Console.WriteLine("Книга успешно добавлена!");
         }
+        static void RemoveBook()
+        {
+            Console.Write("Введите ID книги для удаления: ");
+            if (int.TryParse(Console.ReadLine(), out int id))
+            {
+                var book = books.FirstOrDefault(b => b.Id == id);
+                if (book != null)
+                {
+                    books.Remove(book);
+                    Console.WriteLine("Книга удалена!");
+                }
+                else
+                    Console.WriteLine("Книга с таким ID не найдена.");
+            }
+            else
+            {
+                Console.WriteLine("Ошибка: некорректный ID!");
+            }
+        }
+        static void FindBook()
+        {
+            Console.WriteLine("Найти по:");
+            Console.WriteLine("1 - Названию");
+            Console.WriteLine("2 - Автору");
+            Console.WriteLine("3 - Жанру");
+            Console.Write("Выберите пункт: ");
+            string choice = Console.ReadLine();
+
+            IEnumerable<Book> found = new List<Book>();
+
+            switch (choice)
+            {
+                case "1":
+                    Console.Write("Введите название: ");
+                    string title = Console.ReadLine();
+                    found = books.Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+                    break;
+                case "2":
+                    Console.Write("Введите автора: ");
+                    string author = Console.ReadLine();
+                    found = books.Where(b => b.Author.Contains(author, StringComparison.OrdinalIgnoreCase));
+                    break;
+                case "3":
+                    Console.Write("Введите жанр: ");
+                    string genre = Console.ReadLine();
+                    found = books.Where(b => b.Genre.Contains(genre, StringComparison.OrdinalIgnoreCase));
+                    break;
+                default:
+                    Console.WriteLine("Неверный выбор!");
+                    return;
+            }
+
+            if (found.Any())
+                foreach (var b in found) b.Show();
+            else
+                Console.WriteLine("Ничего не найдено.");
+        }
         
