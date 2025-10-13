@@ -152,4 +152,52 @@ namespace LibraryApp
             else
                 Console.WriteLine("Ничего не найдено.");
         }
+        static void SortBooks()
+        {
+            Console.WriteLine("1 - По названию");
+            Console.WriteLine("2 - По году");
+            Console.Write("Выберите способ сортировки: ");
+            string choice = Console.ReadLine();
+
+            List<Book> sorted;
+            if (choice == "1")
+                sorted = books.OrderBy(b => b.Title).ToList();
+            else if (choice == "2")
+                sorted = books.OrderBy(b => b.Year).ToList();
+            else
+            {
+                Console.WriteLine("Ошибка: неверный выбор!");
+                return;
+            }
+
+            foreach (var b in sorted) b.Show();
+        }
+        static void ShowMinMax()
+        {
+            if (books.Count == 0)
+            {
+                Console.WriteLine("Список пуст!");
+                return;
+            }
+
+            var min = books.OrderBy(b => b.Price).First();
+            var max = books.OrderByDescending(b => b.Price).First();
+
+            Console.WriteLine("\nСамая дешёвая книга:");
+            min.Show();
+
+            Console.WriteLine("Самая дорогая книга:");
+            max.Show();
+        }
+        static void GroupByAuthor()
+        {
+            var groups = books.GroupBy(b => b.Author)
+                              .Select(g => new { Автор = g.Key, Количество = g.Count() });
+
+            Console.WriteLine("\nКоличество книг по авторам:");
+            foreach (var g in groups)
+            {
+                Console.WriteLine($"{g.Автор}: {g.Количество}");
+            }
+        }
         
