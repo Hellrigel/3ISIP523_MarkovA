@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using System;
 
 List<string> StudentNamesRegistry = new List<string>();
 List<Student> StudentRoster = new List<Student>();
@@ -8,7 +8,7 @@ List<Course> CourseCatalog = new List<Course>();
 bool programRunning = true;
 while (programRunning)
 {
-    Console.WriteLine("----------ГЛАВНОЕ МЕНЮ----------");
+    Console.WriteLine("-------ГЛАВНОЕ МЕНЮ-------");
     Console.WriteLine("1 - Зарегистрировать студента");
     Console.WriteLine("2 - Показать список студентов");
     Console.WriteLine("3 - Добавить преподавателя");
