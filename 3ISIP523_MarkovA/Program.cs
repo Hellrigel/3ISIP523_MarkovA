@@ -23,7 +23,189 @@ while (programRunning)
 
     switch (userChoice)
 
-   
+    {
+        case 3:
+            Console.WriteLine("Введите идентификатор: ");
+            int teacherId = Convert.ToInt32(Console.ReadLine());
+            if (teacherId == 0)
+            {
+                Console.WriteLine("Идентификатор не может быть пустым");
+                break;
+            }
+            Console.WriteLine("Введите полное имя: ");
+            string teacherFullName = Console.ReadLine();
+            if (string.IsNullOrEmpty(teacherFullName))
+            {
+                Console.WriteLine("Имя не может быть пустым");
+                break;
+            }
+            Console.WriteLine("Введите дату рождения: (ГГГГ,ММ,ДД)");
+            DateOnly teacherBirthDate = DateOnly.Parse(Console.ReadLine());
+            bool teacherDateValid = DateOnly.TryParse(Console.ReadLine(), out teacherBirthDate);
+            if (!teacherDateValid)
+            {
+                Console.WriteLine("Неверный формат даты");
+                break;
+            }
+            Console.WriteLine("Введите пол: ");
+            string teacherGender = Console.ReadLine();
+            if (string.IsNullOrEmpty(teacherGender))
+            {
+                Console.WriteLine("Пол не может быть пустым");
+                break;
+            }
+            Console.WriteLine("Введите стаж работы с компьютером (в годах): ");
+            int teacherComputerExperience = Convert.ToInt32(Console.ReadLine());
+            FacultyMembers.Add(new Teacher(teacherId, teacherFullName, teacherBirthDate, teacherGender, teacherComputerExperience));
+            break;
+
+        case 4:
+            foreach (var educator in FacultyMembers)
+            {
+                educator.DisplayInfo();
+            }
+            break;
+
+        case 1:
+            Console.WriteLine("Введите идентификатор: ");
+            int studentId = Convert.ToInt32(Console.ReadLine());
+            if (studentId == 0)
+            {
+                Console.WriteLine("Идентификатор не может быть пустым");
+                break;
+            }
+            Console.WriteLine("Введите полное имя: ");
+            string studentFullName = Console.ReadLine();
+            if (string.IsNullOrEmpty(studentFullName))
+            {
+                Console.WriteLine("Имя не может быть пустым");
+                break;
+            }
+            StudentNamesRegistry.Add(studentFullName);
+            Console.WriteLine("Введите дату рождения: (ГГГГ,ММ,ДД)");
+            DateOnly studentBirthDate = DateOnly.Parse(Console.ReadLine());
+            bool studentDateValid = DateOnly.TryParse(Console.ReadLine(), out studentBirthDate);
+            if (!studentDateValid)
+            {
+                Console.WriteLine("Неверный формат даты");
+                break;
+            }
+            Console.WriteLine("Введите пол: ");
+            string studentGender = Console.ReadLine();
+            if (string.IsNullOrEmpty(studentGender))
+            {
+                Console.WriteLine("Пол не может быть пустым");
+                break;
+            }
+            Console.WriteLine("Введите опыт работы с ПК (в годах): ");
+            int studentComputerExperience = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Введите группу здоровья: ");
+            string healthCategory = Console.ReadLine();
+            if (string.IsNullOrEmpty(healthCategory))
+            {
+                Console.WriteLine("Группа здоровья не может быть пустой");
+                break;
+            }
+            StudentRoster.Add(new Student(studentId, studentFullName, studentBirthDate, studentGender, studentComputerExperience, healthCategory));
+            break;
+
+        case 2:
+            foreach (var learner in StudentRoster)
+            {
+                learner.DisplayInfo();
+            }
+            break;
+
+        case 5:
+            Console.WriteLine("Введите идентификатор: ");
+            int courseId = Convert.ToInt32(Console.ReadLine());
+            if (courseId == 0)
+            {
+                Console.WriteLine("Идентификатор не может быть пустым");
+                break;
+            }
+            Console.WriteLine("Введите название курса: ");
+            string courseTitle = Console.ReadLine();
+            if (string.IsNullOrEmpty(courseTitle))
+            {
+                Console.WriteLine("Название не может быть пустым");
+                break;
+            }
+            Console.WriteLine("Введите описание курса: ");
+            string courseDescription = Console.ReadLine();
+            if (string.IsNullOrEmpty(courseDescription))
+            {
+                Console.WriteLine("Описание не может быть пустым");
+                break;
+            }
+            Console.WriteLine("Введите имя преподавателя курса: ");
+            string courseInstructor = Console.ReadLine();
+            if (string.IsNullOrEmpty(courseInstructor))
+            {
+                Console.WriteLine("Имя преподавателя не может быть пустым");
+                break;
+            }
+            Console.WriteLine("Введите имена студентов курса через Enter. Для завершения введите 000: ");
+            List<string> enrolledStudents = new List<string>();
+            bool addingStudents = true;
+            while (addingStudents)
+            {
+                string inputName = Console.ReadLine();
+                if (inputName == "000")
+                {
+                    CourseCatalog.Add(new Course(courseId, courseTitle, courseDescription, courseInstructor, enrolledStudents));
+                    addingStudents = false;
+                }
+                else if (StudentNamesRegistry.Contains(inputName))
+                {
+                    enrolledStudents.Add(inputName);
+                }
+                else
+                {
+                    Console.WriteLine("Данный студент не зарегистрирован в системе!");
+                }
+            }
+            break;
+
+        case 6:
+            foreach (var subject in CourseCatalog)
+            {
+                subject.DisplayInfo();
+            }
+            break;
+
+        case 7:
+            Console.WriteLine("Введите полное имя для поиска курсов: ");
+            string searchName = Console.ReadLine();
+            foreach (var subject in CourseCatalog)
+            {
+                if (subject.EnrolledStudents.Contains(searchName))
+                {
+                    Console.WriteLine(subject.CourseTitle);
+                }
+            }
+            break;
+
+        case 8:
+            foreach (var learner in StudentRoster)
+            {
+                learner.DisplayInfo();
+            }
+            foreach (var educator in FacultyMembers)
+            {
+                educator.DisplayInfo();
+            }
+            foreach (var subject in CourseCatalog)
+            {
+                subject.DisplayInfo();
+            }
+            break;
+
+        case 0:
+            programRunning = false;
+            break;
+    }
+}
 
 class Course
 {
