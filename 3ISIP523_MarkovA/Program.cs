@@ -16,7 +16,7 @@ while (programRunning)
     Console.WriteLine("5 - Создать новый курс");
     Console.WriteLine("6 - Показать все курсы");
     Console.WriteLine("7 - Найти курсы по имени студента");
-    Console.WriteLine("8 - Отобразить полную базу данных");
+    Console.WriteLine("8 - Показать полную базу данных");
     Console.WriteLine("0 - Завершить программу");
 
     int userChoice = Convert.ToInt32(Console.ReadLine());
@@ -39,12 +39,11 @@ while (programRunning)
                 Console.WriteLine("Имя не может быть пустым");
                 break;
             }
-            Console.WriteLine("Введите дату рождения: (ГГГГ,ММ,ДД)");
-            DateOnly teacherBirthDate = DateOnly.Parse(Console.ReadLine());
-            bool teacherDateValid = DateOnly.TryParse(Console.ReadLine(), out teacherBirthDate);
-            if (!teacherDateValid)
+            Console.WriteLine("Введите возраст: ");
+            int teacherAge = Convert.ToInt32(Console.ReadLine());
+            if (teacherAge <= 0 || teacherAge > 120)
             {
-                Console.WriteLine("Неверный формат даты");
+                Console.WriteLine("Некорректный возраст");
                 break;
             }
             Console.WriteLine("Введите пол: ");
@@ -56,7 +55,7 @@ while (programRunning)
             }
             Console.WriteLine("Введите стаж работы с компьютером (в годах): ");
             int teacherComputerExperience = Convert.ToInt32(Console.ReadLine());
-            FacultyMembers.Add(new Teacher(teacherId, teacherFullName, teacherBirthDate, teacherGender, teacherComputerExperience));
+            FacultyMembers.Add(new Teacher(teacherId, teacherFullName, teacherAge, teacherGender, teacherComputerExperience));
             break;
 
         case 4:
@@ -82,12 +81,11 @@ while (programRunning)
                 break;
             }
             StudentNamesRegistry.Add(studentFullName);
-            Console.WriteLine("Введите дату рождения: (ГГГГ,ММ,ДД)");
-            DateOnly studentBirthDate = DateOnly.Parse(Console.ReadLine());
-            bool studentDateValid = DateOnly.TryParse(Console.ReadLine(), out studentBirthDate);
-            if (!studentDateValid)
+            Console.WriteLine("Введите возраст: ");
+            int studentAge = Convert.ToInt32(Console.ReadLine());
+            if (studentAge <= 0 || studentAge > 120)
             {
-                Console.WriteLine("Неверный формат даты");
+                Console.WriteLine("Некорректный возраст");
                 break;
             }
             Console.WriteLine("Введите пол: ");
@@ -106,7 +104,7 @@ while (programRunning)
                 Console.WriteLine("Группа здоровья не может быть пустой");
                 break;
             }
-            StudentRoster.Add(new Student(studentId, studentFullName, studentBirthDate, studentGender, studentComputerExperience, healthCategory));
+            StudentRoster.Add(new Student(studentId, studentFullName, studentAge, studentGender, studentComputerExperience, healthCategory));
             break;
 
         case 2:
@@ -226,7 +224,7 @@ class Course
 
     public void DisplayInfo()
     {
-        Console.WriteLine($"Название: {CourseTitle}\nОписание: {CourseDescription}\nПреподаватель: {InstructorName}");
+        Console.WriteLine($"Название курса: {CourseTitle}\nОписание: {CourseDescription}\nПреподаватель: {InstructorName}");
         Console.WriteLine("Зачисленные студенты:");
         foreach (var participant in EnrolledStudents)
         {
@@ -238,19 +236,19 @@ class Course
 class Person
 {
     private string FullName;
-    private DateOnly BirthDate;
+    private int Age;
     private string Gender;
 
-    public Person(string name, DateOnly dateOfBirth, string gender)
+    public Person(string name, int age, string gender)
     {
         FullName = name;
-        BirthDate = dateOfBirth;
+        Age = age;
         Gender = gender;
     }
 
     public virtual void DisplayInfo()
     {
-        Console.WriteLine($"ФИО: {FullName}\nДата рождения: {BirthDate}\nПол: {Gender}");
+        Console.WriteLine($"ФИО: {FullName}\nВозраст: {Age}\nПол: {Gender}");
     }
 }
 
@@ -259,8 +257,8 @@ class Teacher : Person
     private int TeacherId;
     private int ComputerExperience;
 
-    public Teacher(int id, string name, DateOnly dateOfBirth, string gender, int experience)
-        : base(name, dateOfBirth, gender)
+    public Teacher(int id, string name, int age, string gender, int experience)
+        : base(name, age, gender)
     {
         TeacherId = id;
         ComputerExperience = experience;
@@ -281,8 +279,8 @@ class Student : Person
     private int PCExperienceYears;
     private string HealthGroup;
 
-    public Student(int id, string name, DateOnly dateOfBirth, string gender, int computerExperience, string healthGroup)
-        : base(name, dateOfBirth, gender)
+    public Student(int id, string name, int age, string gender, int computerExperience, string healthGroup)
+        : base(name, age, gender)
     {
         StudentId = id;
         PCExperienceYears = computerExperience;
