@@ -226,10 +226,10 @@ class Program
             int roll = random.Next(4);
             switch (roll)
             {
-                case 0: return new Enemy("ВВГ", 120, 18, 12, critChance: 30);
-                case 1: return new Enemy("КОВАЛЬСКИЙ", 150, 16, 14, ignoreArmor: true);
+                case 0: return new Enemy("ВВГ", 100, 18, 12, critChance: 30);
+                case 1: return new Enemy("КОВАЛЬСКИЙ", 110, 16, 14, ignoreArmor: true);
                 case 2: return new Enemy("АРХИМАГ C++", 90, 20, 11, canFreeze: true, freezeChance: 25);
-                default: return new Enemy("ПЕСТОВ С--", 130, 22, 6, ignoreArmor: true, canFreeze: true, freezeChance: 30);
+                default: return new Enemy("ПЕСТОВ С--", 110, 22, 6, ignoreArmor: true, canFreeze: true, freezeChance: 30);
             }
         }
         else
